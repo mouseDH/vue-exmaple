@@ -17,20 +17,46 @@ const {
   onNodeDragStop,
   onPaneClick,
   onPaneScroll,
+  onEdgeClick,
   onPaneContextMenu,
   onNodeDragStart,
   onMoveEnd,
   addEdges,
+  findEdge,
+  onNodesInitialized,
+  onUpdateNodeInternals,
+  onNodesChange,
 } = useVueFlow()
 
 const captureZoomClick = ref(false)
 
 const captureZoomScroll = ref(false)
 
+onUpdateNodeInternals((nodes)=>{
+  console.log()
+})
+onNodesChange((node)=>{
+  if(node&&node[0]&&node[0].type&&node[0].type==='add'){
+    console.log()
+  }  
+})
+onNodesInitialized((nodes)=>{
+  console.log()
+})
+
+onEdgeClick((event) => {
+  const edge = event.edge
+  const ed = findEdge(edge.id)
+  console.log(ed)
+})
+
 onConnect((params) => {
-    // sourceId targetId sourceHandleId targetHandleId
-    console.log(JSON.stringify(params))
-    addEdges(params) 
+  // sourceId targetId sourceHandleId targetHandleId
+  console.log(JSON.stringify(params))
+  params.updatable = true
+  params.label = '测试'
+  params.id = uuidv3()
+  addEdges(params)
 })
 
 onNodeDragStart((e) => console.log('drag start', e))
@@ -44,10 +70,14 @@ onPaneScroll((event) => captureZoomScroll.value && console.log('pane scroll', ev
 onPaneContextMenu((event) => captureZoomClick.value && console.log('pane ctx menu', event))
 
 onMoveEnd((flowTransform) => console.log('move end', flowTransform))
+
+const show = ref(true)
+
 </script>
 
 <template>
-  <div class="controls">
+  <div v-if="show">
+    <div class="controls">
     <div>
       <label class="label" for="draggable">
         nodesDraggable
@@ -109,14 +139,17 @@ onMoveEnd((flowTransform) => console.log('move end', flowTransform))
     <div>
       <label class="label" for="capturezoompaneclick">
         capture onPaneClick
-        <input id="capturezoompaneclick" v-model="captureZoomClick" type="checkbox" class="vue-flow__capturezoompaneclick" />
+        <input id="capturezoompaneclick" v-model="captureZoomClick" type="checkbox"
+          class="vue-flow__capturezoompaneclick" />
       </label>
     </div>
     <div>
       <label class="label" for="capturezoompanescroll">
         capture onPaneScroll
-        <input id="capturezoompanescroll" v-model="captureZoomScroll" type="checkbox" class="vue-flow__capturezoompanescroll" />
+        <input id="capturezoompanescroll" v-model="captureZoomScroll" type="checkbox"
+          class="vue-flow__capturezoompanescroll" />
       </label>
     </div>
+  </div>
   </div>
 </template>

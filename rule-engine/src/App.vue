@@ -7,7 +7,7 @@ import useDragAndDrop from './components/useDnD'
 import SaveRestoreControls from './components/Controls.vue'
 import InteractionControls from './components/InteractionControls.vue'
 
-const { onConnect, addEdges } = useVueFlow()
+const { addEdges, updateEdge } = useVueFlow()
 
 const { onDragOver, onDrop, onDragLeave, isDragOver } = useDragAndDrop()
 
@@ -15,32 +15,23 @@ const nodes = ref([])
 
 const edges = ref([])
 
-function handleEdgeClick(event){
-    console.log(JSON.stringify(event))
-}
-
-function handleEdgeDoubleClick(event){
-  console.log(JSON.stringify(event))
-  console.log(JSON.stringify(event.edge))
-}
-
 </script>
 
 <template>
-    <div class="dndflow" @drop="onDrop">
-    <VueFlow :nodes="nodes" @dragover="onDragOver" @dragleave="onDragLeave" :edges="edges" 
-    class="interactionflow"  @edgeClick="handleEdgeClick" @edgeDoubleClick="handleEdgeDoubleClick" fit-view-on-init>
+  <div class="dndflow" @drop="onDrop">
+    <Sidebar />
+    <VueFlow :nodes="nodes" :edges="edges" class="interactionflow" @dragover="onDragOver" @dragleave="onDragLeave"
+     
+      fit-view-on-init>
       <SaveRestoreControls />
-      
-      <DropzoneBackground
-        :style="{
-          backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
-          transition: 'background-color 0.2s ease',
-        }"
-      />
+
+      <DropzoneBackground :style="{
+    backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+    transition: 'background-color 0.2s ease',
+  }" />
       <InteractionControls />
     </VueFlow>
 
-    <Sidebar />
+    
   </div>
 </template>
